@@ -1,0 +1,56 @@
+---
+#------------------------------------------------------------------------------
+# Name: openssh.yml
+# Info: Task file that automates the installation and OpenSSH for Windows.
+#
+# tags:
+# - install_nuget
+# - install_openssh
+# - install_powercli
+# - disable_warning
+# - disable_custexp
+#
+# refs:
+# - https://docs.ansible.com/ansible/latest/modules/win_psmodule_module.html
+# - https://docs.ansible.com/ansible/latest/modules/win_shell_module.html
+# - https://docs.ansible.com/ansible/latest/modules/win_psexec_module.html
+#------------------------------------------------------------------------------
+
+# Install NuGet via PowerShell.
+- name: Installing the NuGet package provider ...
+  win_shell: Install-PackageProvider Nuget –Force # Install Nuget.
+  tags: install_nuget, install_openssh
+
+# Install PowerCLI via the PowerShell gallery.
+- name: Install the PowerCLI Module for PowerShell ...
+  win_psmodule:
+    name: VMware.PowerCLI                  # Name of PS Module.
+    state: present                         # Install the package.
+  tags: install_powercli, install_openssh
+
+# # Disable Invalid Cert Warning for PowerCLI.
+# - name: Disabling Invalid Cert Warning For PowerCLI ...
+#   win_psexec:
+#     system: yes                                                                         # Use the system account.
+#     elevated: yes                                                                       # Run the command with elevated privileges.
+#     command: Set-PowerCLIConfiguration -InvalidCertificateAction ignore -confirm:$false # Disable cert warning.
+#   tags: disable_warning, install_openssh
+
+# Disable Invalid Cert Warning for PowerCLI.
+- name: Disabling Invalid Cert Warning For PowerCLI ...
+  win_shell: Set-PowerCLIConfiguration -InvalidCertificateAction ignore -confirm:$false
+  tags: disable_warning, install_openssh
+
+
+# # Disable the VMPowerCLI CEI program.
+# - name: Disabling the PowerCLI Customer Experience Improvement Program ...
+#   win_psexec:
+#     system: yes                                                                  # Use the system account.
+#     elevated: yes                                                                # Run the command with elevated privileges.
+#     command: Set-PowerCLIConfiguration -ParticipateInCeip $false -confirm:$false # Disable VMCEI Program.
+#   tags: disable_custexp, install_openssh
+
+# Disable the VMPowerCLI CEI program.
+- name: Disabling the PowerCLI Customer Experience Improvement Program ...
+  win_shell: Set-PowerCLIConfiguration -ParticipateInCeip $false -confirm:$false
+  tags: disable_custexp, install_openssh

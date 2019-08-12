@@ -1,0 +1,34 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint:
+  name: yamllint
+platforms:
+  - name: windows-10-winrm
+    box: xnohat/windows10lite
+#    box: eyewaretech/windows-10-1709-base-winrm
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      windows-10-winrm:
+        ansible_become: false
+        ansible_user: vagrant
+        ansible_password: vagrant
+        ansible_port: 5985
+        ansible_host: 127.0.0.1
+        ansible_connection: winrm
+        ansible_winrm_scheme: http
+        ansible_winrm_server_cert_validation: ignore
+  lint:
+    name: ansible-lint
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

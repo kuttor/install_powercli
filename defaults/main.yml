@@ -1,0 +1,9 @@
+---
+#------------------------------------------------------------------------------
+# name: default/main.yml
+# info: Default variable file for role.
+#------------------------------------------------------------------------------
+
+artifact_server_url: https://resource.mcp-services.net/devops
+openssh_home_dir: "C:\\Program Files\\OpenSSH"
+temp_folder: "C:\\Windows\\Temp"

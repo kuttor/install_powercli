@@ -1,0 +1,46 @@
+---
+#------------------------------------------------------------------------------
+# name: windows.yml
+# info: Automated installer based task file. I.E. MSI/EXE
+#
+# tags:
+# - install_powercli
+# - reboot_vm
+#
+# Refs:
+# - win_msi
+# - win_package
+# - win_shell
+# - win_reboot
+#------------------------------------------------------------------------------
+
+# Downloads WMF 5.1
+- name: Download and install windows management framework ...
+  block:
+    - win_get_url:
+        url: 'https://download.microsoft.com/download/6/F/5/6F5FF66C-6775-42B0-86C4-47D41F2DA187/Win8.1AndW2K12R2-KB3191564-x64.msu'
+        dest: '{{ temp_folder }}\win8.1andw2k12r2-kb3191564-x64.msu'
+        timeout: 600
+
+    - win_hotfix:
+        hotfix_kb: KB3191564
+        source: '{{ temp_folder }}\Win8.1AndW2K12R2-KB3191564-x64.msu'
+        state: present
+      register: hotfix_install
+
+    - win_reboot:
+      when: hotfix_install.reboot_required
+
+  when: ansible_distribution is match("Microsoft Windows Server 2012.*")
+
+- name: install powercli via the powershell store
+  win_psmodule:
+    name: VMware.PowerCLI
+    state: present
+
+# Kick the box!
+- name: Restarting the Virtual Machine ...
+  win_reboot:
+    pre_reboot_delay: 30  # Delay between shutdown and reboot.
+    reboot_timeout: 600   # Maximum time to wait for boot.
+  tags: reboot_vm

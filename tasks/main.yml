@@ -1,0 +1,22 @@
+---
+#------------------------------------------------------------------------------
+# name: default/main.yml
+#
+# task files:
+# - windows.yml
+# - nuget.yml
+#
+# tags:
+# - import_windows_yml
+# - import_nuget_yml
+#------------------------------------------------------------------------------
+
+# Import the Automated Installer tasks. i.e MSI and EXE.
+- import_tasks: windows.yml
+  when: ansible_os_family == 'Windows' # Double check the syntax.
+  tags: import_windows_yml
+
+# Import the NuGet installation and the Nuget based package installation tasks.
+- import_tasks: nuget.yml
+  when: ansible_os_family == 'Windows'  # Double check the syntax.
+  tags: import_nuget_yml

@@ -1,0 +1,10 @@
+galaxy_info:
+  author: Andrew Kuttor
+  description:  Automations the Windows Jumphost building.
+  company: NTT-CIS
+  license: license (GPLv2, CC-BY, etc)
+  min_ansible_version: 1.2
+  galaxy_tags: [windows_jumphost]
+dependencies: []
+  # List your role dependencies here, one per line. Be sure to remove the '[]' above,
+  # if you add dependencies to this list.
